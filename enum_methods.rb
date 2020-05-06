@@ -1,13 +1,14 @@
-module Enumerable 
+module Enumerable
   def my_each
-  	return to_enum :my_each unless block_given?
+    return self unless block_given?
   	for i in self
   		yield(i)
   	end
+
   end
 
   def my_each_with_index
-  	return to_enum :my_each_with_index unless block_given?
+  	return self unless block_given?
   	i=0
   	for element in self
   		yield(element, i)
@@ -17,29 +18,68 @@ module Enumerable
 
 
   def my_select
-    return to_enum :my_select unless block_given?
+    return self unless block_given?
     new_arr=[]
-    for i in self
-         if yield(i) == true
-         new_arr << i
-       end
+    l=self.length
+    l.times do |i|
+        new_arr << self[i] if yield(self[i])
+        i += 1
     end
-     p new_arr
+      new_arr
   end
 
-  def my_all
+  def my_all?
     return true unless block_given?
-    
+    for i in self
+      t_f= yield(i)
+      print t_f
+      return false unless t_f
+    end
+    return true
   end
 
-end
+  def my_any?
+    return true unless block_given?
+    for i in self
+      t_f=yield(i)
+      return true if t_f
+    end
+  return false
+  end
 
+  def my_none?
+    return true unless block_given?
+    for i in self
+      t_f=yield(i)
+      return false if t_f
+    end
+  return true
+  end
+
+  def my_count
+    return self unless block_given?
+    count=0
+    l=self.length
+    l.times do |i|
+        count+=1 if yield(self[i])
+        i += 1
+    end
+      count
+  end
 
 
 
 puts "**********************************************************************************************************"
 
-myarray=[20,30,40,5,400,401,22,25,53]
-myarray.my_each
+myarray=[20,30,40,5,400,401,22,25,53, 10, 12, 12, 454545]
+myhash={"1" => "January", "2" => "February"}
+myarray.my_each 
+myhash.my_each
 myarray.my_each_with_index
-myarray.my_select
+r=myarray.my_select
+myhash.my_select
+res=myarray.my_all?
+myarray.my_any?
+myarray.my_none?
+r=myarray.my_count
+end
