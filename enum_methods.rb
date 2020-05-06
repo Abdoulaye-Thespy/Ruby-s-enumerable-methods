@@ -62,7 +62,7 @@ module Enumerable
     l=self.length
     l.times do |i|
         count+=1 if yield(self[i])
-        i += 1
+         i += 1
     end
       count
   end
