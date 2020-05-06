@@ -67,6 +67,17 @@ module Enumerable
       count
   end
 
+    def my_map
+    return self unless block_given?
+    new_arr=[]
+    l=self.length
+    l.times do |i|
+        new_arr << yield(self[i])
+        i += 1
+    end
+      p new_arr
+  end
+
 
 
 puts "**********************************************************************************************************"
@@ -78,8 +89,9 @@ myhash.my_each
 myarray.my_each_with_index
 r=myarray.my_select
 myhash.my_select
-res=myarray.my_all?
+myarray.my_all?
 myarray.my_any?
 myarray.my_none?
-r=myarray.my_count
+myarray.my_count
+r=myarray.my_map
 end
