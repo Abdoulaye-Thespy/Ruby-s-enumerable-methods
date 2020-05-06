@@ -67,7 +67,7 @@ module Enumerable
       count
   end
 
-    def my_map
+    def my_map ()
     return self unless block_given?
     new_arr=[]
     l=self.length
@@ -78,6 +78,17 @@ module Enumerable
       p new_arr
   end
 
+    def my_inject (base)
+    return self unless block_given?
+    sum=base
+    l=self.length
+    l.times do |i|
+        sum= yield(sum, self[i])
+        puts sum
+        i += 1
+    end
+      sum
+  end
 
 
 puts "**********************************************************************************************************"
@@ -93,5 +104,6 @@ myarray.my_all?
 myarray.my_any?
 myarray.my_none?
 myarray.my_count
-r=myarray.my_map
+myarray.my_map
+r=myarray.my_inject
 end
