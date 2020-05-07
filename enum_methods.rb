@@ -40,7 +40,7 @@ module Enumerable
       return true
     end
 
-  unless block_given?
+   unless block_given?
 
           my_each { |ind| return false if ind == false || ind.nil? }
       return true
@@ -55,24 +55,54 @@ module Enumerable
 
 
 
-  def my_any?
-    return true unless block_given?
+  def my_any? (arg=nil)
+     if arg!=nil
+      if arg.is_a?(Regexp)
+        my_each { |ind| return true if ind.match(arg) }
+      elsif arg.is_a?(Module)
+        my_each { |ind| return true if ind.is_a?(arg) }
+      else
+        my_each { |ind| return true if ind != arg }
+      end
+      return false
+    end
 
-    each do |i|
+    unless block_given?
+
+        my_each { |ind| return true if ind != false && ind!=nil }
+      return false
+    end
+
+    my_each do |i|
       t_f = yield(i)
       return true if t_f
     end
     false
   end
 
-  def my_none?
-    return true unless block_given?
-
-    each do |i|
-      t_f = yield(i)
-      return false if t_f
+  def my_none? (arg=nil)
+     if arg!=nil
+      if arg.is_a?(Regexp)
+        my_each { |ind| return false if ind.match(arg) }
+      elsif arg.is_a?(Module)
+        my_each { |ind| return false if ind.is_a?(arg) }
+      else
+        my_each { |ind| return false if ind != arg }
+      end
+      return true
     end
-    true
+
+    unless block_given?
+
+        my_each { |ind| return false if ind != false && ind!=nil }
+      return true
+    end
+
+    my_each do |i|
+      t_f = yield(i)
+      return true if t_f
+    end
+    false
   end
 
   def my_count
@@ -127,7 +157,7 @@ end
   myarray.my_each
   myhash.my_each
   myarray.my_each_with_index
-  myarray.my_select {|x| puts "element is #{x}" if x.even?}
+  myarray.my_select
   myhash.my_select
   myarray.my_all?
   myarray.my_any?
