@@ -1,17 +1,16 @@
 module Enumerable
   def my_each
-    return self unless block_given?
+    return to_enum:my_each unless block_given?
 
-    each do |i|
+    for i in self
       yield(i)
     end
   end
 
   def my_each_with_index
-    return self unless block_given?
-
-    i = 0
-    each do |element|
+    return to_enum:my_each unless block_given?
+    i=0
+   for element in self
       yield(element, i)
       i += 1
     end
@@ -29,16 +28,32 @@ module Enumerable
     new_arr
   end
 
-  def my_all?
-    return true unless block_given?
+  def my_all? (arg=nil)
+     if arg!=nil
+      if arg.is_a?(Regexp)
+        my_each { |ind| return false unless ind.match(arg) }
+      elsif arg.is_a?(Module)
+        my_each { |ind| return false unless ind.is_a?(arg) }
+      else
+        my_each { |ind| return false if ind != arg }
+      end
+      return true
+    end
 
-    each do |i|
+  unless block_given?
+
+          my_each { |ind| return false if ind == false || ind.nil? }
+      return true
+    end
+
+    my_each do |i|
       t_f = yield(i)
-      print t_f
       return false unless t_f
     end
     true
   end
+
+
 
   def my_any?
     return true unless block_given?
@@ -102,7 +117,6 @@ end
     r = array.my_inject(1) do |x, y|
       x * y
     end
-    p r
     r
   end
 
@@ -113,7 +127,7 @@ end
   myarray.my_each
   myhash.my_each
   myarray.my_each_with_index
-  r = myarray.my_select
+  myarray.my_select {|x| puts "element is #{x}" if x.even?}
   myhash.my_select
   myarray.my_all?
   myarray.my_any?
@@ -121,6 +135,17 @@ end
   myarray.my_count
   myarray.my_map
   myarray.my_inject(0)
-  r = myarray.multiply_els([2, 3, 4, 5])
-  p r
+  # r = myarray.multiply_els([2, 3, 4, 5])
+  pr2=%w[ant bear cat].my_all? { |word| word.length >= 3 }
+  p pr2
+  pr=%w[ant bear cat].my_all? { |word| word.length >= 4 }
+  p pr
+  pr3=%w[ant bear cat].my_all?(/t/)   
+  p pr3
+  pr4=[1, 2i, 3.14].my_all?(Numeric)  
+  p pr4
+  pr5=[nil, true, 99].my_all? 
+  p pr5
+  pr6=[].my_all? 
+  p pr6
 end
