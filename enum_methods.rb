@@ -2,34 +2,34 @@ module Enumerable
   def my_each
     return to_enum:my_each unless block_given?
 
-    for i in self
+    each do |i|
       yield(i)
     end
   end
 
   def my_each_with_index
-    return to_enum:my_each unless block_given?
-    i=0
-   for element in self
+    return to_enum:my_each_with_index unless block_given?
+
+    i = 0
+    each do |element|
       yield(element, i)
       i += 1
     end
   end
 
   def my_select
-    return self unless block_given?
+    return to_enum:my_select unless block_given?
 
     new_arr = []
     l = length
     l.times do |i|
       new_arr << self[i] if yield(self[i])
-      i += 1
     end
     new_arr
   end
 
-  def my_all? (arg=nil)
-     if arg!=nil
+  def my_all?(arg = nil)
+    unless arg.nil?
       if arg.is_a?(Regexp)
         my_each { |ind| return false unless ind.match(arg) }
       elsif arg.is_a?(Module)
@@ -38,13 +38,13 @@ module Enumerable
         my_each { |ind| return false if ind != arg }
       end
       return true
-    end
+   end
 
-   unless block_given?
+    unless block_given?
 
-          my_each { |ind| return false if ind == false || ind.nil? }
+      my_each { |ind| return false if ind == false || ind.nil? }
       return true
-    end
+     end
 
     my_each do |i|
       t_f = yield(i)
@@ -53,23 +53,21 @@ module Enumerable
     true
   end
 
-
-
-  def my_any? (arg=nil)
-     if arg!=nil
+  def my_any?(arg = nil)
+    unless arg.nil?
       if arg.is_a?(Regexp)
         my_each { |ind| return true if ind.match(arg) }
       elsif arg.is_a?(Module)
         my_each { |ind| return true if ind.is_a?(arg) }
       else
-        my_each { |ind| return true if ind != arg }
+        my_each { |ind| return true if ind == arg }
       end
       return false
-    end
+   end
 
     unless block_given?
 
-        my_each { |ind| return true if ind != false && ind!=nil }
+      my_each { |ind| return true if ind != false && !ind.nil? }
       return false
     end
 
@@ -80,36 +78,45 @@ module Enumerable
     false
   end
 
-  def my_none? (arg=nil)
-     if arg!=nil
+  def my_none?(arg = nil)
+    unless arg.nil?
       if arg.is_a?(Regexp)
         my_each { |ind| return false if ind.match(arg) }
       elsif arg.is_a?(Module)
         my_each { |ind| return false if ind.is_a?(arg) }
       else
-        my_each { |ind| return false if ind != arg }
+        my_each { |ind| return false if ind == arg }
       end
       return true
-    end
+   end
 
     unless block_given?
 
-        my_each { |ind| return false if ind != false && ind!=nil }
+      my_each { |ind| return false if ind == false || ind.nil? }
       return true
     end
 
     my_each do |i|
       t_f = yield(i)
-      return true if t_f
+      return false if t_f
     end
-    false
+    true
   end
 
-  def my_count
+  def my_count (arg=nil)
     return self unless block_given?
 
     count = 0
-    l = length
+    l=self.length
+
+    unless arg.nil?
+      if arg.is_a?(Regexp)
+        my_each { |ind| count+=1 if ind.match(arg) }
+
+      end
+   end
+   return l unless block_given
+
     l.times do |i|
       count += 1 if yield(self[i])
       i += 1
@@ -117,25 +124,25 @@ module Enumerable
     count
   end
 
-  def my_map()
-    puts self
-    return self unless block_given?
-
+  def my_map(arg=nil)
     new_arr = []
-    l = length
-    l.times do |i|
-      new_arr << yield(self[i])
-      i += 1
+    if arg.is_a?(Proc)
+      if is_a?(Array)
+        my_each { |num| arr << arg.call(num) }
+      end
     end
+    return to_enum:my_each_map unless block_given?
 
-    p new_arr
+    my_each do |i|
+      new_arr << yield(i)
+    end
 end
 
-  def my_inject(base)
+  def my_inject(base=nil)
     return self unless block_given?
 
     sum = base
-    l = length
+    l = self.length
     l.times do |i|
       sum = yield(sum, self[i])
       i += 1
@@ -164,18 +171,8 @@ end
   myarray.my_none?
   myarray.my_count
   myarray.my_map
-  myarray.my_inject(0)
+  myarray.my_inject()
   # r = myarray.multiply_els([2, 3, 4, 5])
-  pr2=%w[ant bear cat].my_all? { |word| word.length >= 3 }
-  p pr2
-  pr=%w[ant bear cat].my_all? { |word| word.length >= 4 }
-  p pr
-  pr3=%w[ant bear cat].my_all?(/t/)   
-  p pr3
-  pr4=[1, 2i, 3.14].my_all?(Numeric)  
-  p pr4
-  pr5=[nil, true, 99].my_all? 
-  p pr5
-  pr6=[].my_all? 
-  p pr6
+  r=(1..4).collect { "cat"  }  
+  p r
 end
