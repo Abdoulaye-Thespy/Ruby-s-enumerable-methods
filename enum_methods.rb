@@ -1,6 +1,6 @@
 module Enumerable
   def my_each
-    return to_enum:my_each unless block_given?
+    return to_enum: my_each unless block_given?
 
     each do |i|
       yield(i)
@@ -8,7 +8,7 @@ module Enumerable
   end
 
   def my_each_with_index
-    return to_enum:my_each_with_index unless block_given?
+    return to_enum: my_each_with_index unless block_given?
 
     i = 0
     each do |element|
@@ -18,7 +18,7 @@ module Enumerable
   end
 
   def my_select
-    return to_enum:my_select unless block_given?
+    return to_enum: my_select unless block_given?
 
     new_arr = []
     l = length
@@ -38,13 +38,13 @@ module Enumerable
         my_each { |ind| return false if ind != arg }
       end
       return true
-   end
+    end
 
     unless block_given?
 
       my_each { |ind| return false if ind == false || ind.nil? }
       return true
-     end
+    end
 
     my_each do |i|
       t_f = yield(i)
@@ -63,7 +63,7 @@ module Enumerable
         my_each { |ind| return true if ind == arg }
       end
       return false
-   end
+    end
 
     unless block_given?
 
@@ -88,7 +88,7 @@ module Enumerable
         my_each { |ind| return false if ind == arg }
       end
       return true
-   end
+    end
 
     unless block_given?
 
@@ -103,52 +103,46 @@ module Enumerable
     true
   end
 
-  def my_count (arg=nil)
+  def my_count(arg = nil)
     return self unless block_given?
 
     count = 0
-    l=self.length
+    l = length
 
     unless arg.nil?
       if arg.is_a?(Regexp)
-        my_each { |ind| count+=1 if ind.match(arg) }
+        my_each { |ind| count += 1 if ind.match(arg) }
 
       end
-   end
-   return l unless block_given
+    end
+    return l unless block_given
 
     l.times do |i|
       count += 1 if yield(self[i])
-      i += 1
     end
     count
   end
 
-  def my_map(arg=nil)
+  def my_map(arg = nil)
     new_arr = []
-    if arg.is_a?(Proc)
-      if is_a?(Array)
-        my_each { |num| arr << arg.call(num) }
-      end
-    end
-    return to_enum:my_each_map unless block_given?
+    my_each { |num| arr << arg.call(num) } if arg.is_a?(Proc)
+    return to_enum: my_each_map unless block_given?
 
     my_each do |i|
       new_arr << yield(i)
     end
-end
+  end
 
-  def my_inject(base=nil)
-    return self unless block_given?
+  def my_inject(base = nil)
+    return to_enum: my_inject unless block_given?
 
     sum = base
-    l = self.length
+    l = length
     l.times do |i|
       sum = yield(sum, self[i])
-      i += 1
     end
     sum
-end
+  end
 
   def multiply_els(array)
     r = array.my_inject(1) do |x, y|
@@ -171,8 +165,5 @@ end
   myarray.my_none?
   myarray.my_count
   myarray.my_map
-  myarray.my_inject()
-  # r = myarray.multiply_els([2, 3, 4, 5])
-  r=(1..4).collect { "cat"  }  
-  p r
+  myarray.my_inject
 end
