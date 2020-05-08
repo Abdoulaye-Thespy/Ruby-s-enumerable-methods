@@ -91,7 +91,7 @@ module Enumerable
 
     unless block_given?
 
-      my_each { |ind| return false if ind !=false || !ind.nil? }
+      my_each { |ind| return false if ind != false || !ind.nil? }
       return true
     end
 
@@ -103,20 +103,18 @@ module Enumerable
   end
 
   def my_count(arg = nil)
-
     count = 0
 
     unless arg.nil?
       if arg.is_a?(Regexp)
-        my_each { |ind| count += 1  if ind.match(arg) }
+        my_each { |ind| count += 1 if ind.match(arg) }
       elsif arg.is_a?(Numeric)
-        my_each {|ind| count +=1 if ind===arg}
-          
+        my_each { |ind| count += 1 if ind.match(arg) }
 
       end
       return count
     end
-    return self.length unless block_given?
+    return length unless block_given?
 
     my_each do |i|
       count += 1 if yield(i)
@@ -126,21 +124,24 @@ module Enumerable
 
   def my_map(arg = nil)
     new_arr = []
-    my_each { |num| arr << arg.call(num) } if arg.is_a?(Proc)
-    return to_enum(:my_map) unless block_given?
+    my_each { |ind| arr << arg.call(ind) } if arg.is_a?(Proc)
+    return self unless block_given?
 
-    my_each do |i|
+    each do |i|
       new_arr << yield(i)
     end
+    p new_arr
   end
 
   def my_inject(base = nil)
+    sum = base unless base.nil?
+    sum = 0
+    puts sum
     return to_enum(:my_inject) unless block_given?
 
-    sum = base
-    l = length
-    l.times do |i|
-      sum = yield(sum, self[i])
+    each do |i|
+      puts i
+      sum = yield(sum, i)
     end
     sum
   end
@@ -151,4 +152,4 @@ module Enumerable
     end
     r
   end
- end
+end
