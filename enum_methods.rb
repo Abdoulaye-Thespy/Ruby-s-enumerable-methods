@@ -2,8 +2,8 @@ module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
 
-    self.length.times do |i|
-      yield(self[i])
+    for i in self
+      yield(i)
     end
   end
 
@@ -91,7 +91,7 @@ module Enumerable
 
     unless block_given?
 
-      my_each { |ind| return false if ind != false || !ind.nil? }
+      my_each { |ind| return false if ind == true}
       return true
     end
 
@@ -152,6 +152,6 @@ module Enumerable
     end
     r
   end
-  a = %w[a b c]
-  a.my_each_with_index{ |x| puts x, ' -- ' }
+  pr =[nil, false, true].my_none?  
+  p pr
 end
