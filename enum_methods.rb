@@ -2,7 +2,7 @@ module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
 
-    each do |i|
+    self.length.times do |i|
       yield(i)
     end
   end
@@ -152,4 +152,6 @@ module Enumerable
     end
     r
   end
+  a = %w[a b c]
+  a.my_each { |x| puts x, ' -- ' }
 end
