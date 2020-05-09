@@ -127,23 +127,21 @@ module Enumerable
     my_each { |ind| arr << arg.call(ind) } if arg.is_a?(Proc)
     return to_enum(:my_map) unless block_given?
 
-    each do |i|
+    my_each do |i|
       new_arr << yield(i)
     end
     p new_arr
   end
 
-  def my_inject(base = nil)
-    sum = base unless base.nil?
-    sum = 0
-    puts sum
-    return to_enum(:my_inject) unless block_given?
+  def my_inject(base = nil, sym = nil, &block)
+    base = base.to_sym if base.is_a?(String) && !sym && !block
+    block, memo = memo.to_proc, nil if memo.is_a?(Symbol) && !sym
+    sym = sym.to_sym if sym.is_a?(String)
+    block = sym.to_proc if sym.is_a?(Symbol)
 
-    each do |i|
-      puts i
-      sum = yield(sum, i)
-    end
-    sum
+  
+    my_each { |x| base = base.nil? ? x : block.yield(base, x) }
+    base
   end
 
   def multiply_els(array)
@@ -153,8 +151,11 @@ module Enumerable
     r
   end
   ary = [1, 2, 4, 2]
-  pr =ary.my_each
+  pr =(5..10).my_inject(2) { |product, n| product * n }
   p pr
-  pr1=ary.my_map
-  p pr1
+
+  l = %w{ cat sheep bear }.my_inject do |memo, word|
+   memo.length > word.length ? memo : word
+end
+p l
 end
