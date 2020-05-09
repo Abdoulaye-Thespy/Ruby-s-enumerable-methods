@@ -91,7 +91,7 @@ module Enumerable
 
     unless block_given?
 
-      my_each { |ind| return false if ind == true}
+      my_each { |ind| return false if ind == true }
       return true
     end
 
@@ -109,7 +109,7 @@ module Enumerable
       if arg.is_a?(Regexp)
         my_each { |ind| count += 1 if ind.match(arg) }
       elsif arg.is_a?(Numeric)
-        my_each { |ind| count += 1 if ind===arg }
+        my_each { |ind| count += 1 if ind == arg }
 
       end
       return count
@@ -135,11 +135,13 @@ module Enumerable
 
   def my_inject(base = nil, sym = nil, &block)
     base = base.to_sym if base.is_a?(String) && !sym && !block
-    block, memo = memo.to_proc, nil if memo.is_a?(Symbol) && !sym
+    if memo.is_a?(Symbol) && !sym
+      block = memo.to_proc
+      base = nil
+    end
     sym = sym.to_sym if sym.is_a?(String)
     block = sym.to_proc if sym.is_a?(Symbol)
 
-  
     my_each { |x| base = base.nil? ? x : block.yield(base, x) }
     base
   end
@@ -150,12 +152,8 @@ module Enumerable
     end
     r
   end
-  ary = [1, 2, 4, 2]
-  pr =(5..10).my_inject(2) { |product, n| product * n }
-  p pr
 
-  l = %w{ cat sheep bear }.my_inject do |memo, word|
-   memo.length > word.length ? memo : word
-end
-p l
+  ary = [1, 2, 4, 2]
+  r = ary.my_count(&:even?)
+  p r
 end
