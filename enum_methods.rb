@@ -3,7 +3,7 @@ module Enumerable
     return to_enum(:my_each) unless block_given?
 
     self.length.times do |i|
-      yield(i)
+      yield(self[i])
     end
   end
 
@@ -12,7 +12,7 @@ module Enumerable
 
     i = 0
     my_each do |element|
-      yield(element, i)
+      yield(i, element)
       i += 1
     end
   end
@@ -153,5 +153,5 @@ module Enumerable
     r
   end
   a = %w[a b c]
-  a.my_each { |x| puts x, ' -- ' }
+  a.my_each_with_index{ |x| puts x, ' -- ' }
 end
