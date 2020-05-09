@@ -125,7 +125,7 @@ module Enumerable
   def my_map(arg = nil)
     new_arr = []
     my_each { |ind| arr << arg.call(ind) } if arg.is_a?(Proc)
-    return self unless block_given?
+    return to_enum(:my_map) unless block_given?
 
     each do |i|
       new_arr << yield(i)
@@ -153,6 +153,8 @@ module Enumerable
     r
   end
   ary = [1, 2, 4, 2]
-  pr =ary.my_count(1)
+  pr =ary.my_each
   p pr
+  pr1=ary.my_map
+  p pr1
 end
