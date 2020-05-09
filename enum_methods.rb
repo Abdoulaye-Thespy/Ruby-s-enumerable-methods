@@ -109,7 +109,7 @@ module Enumerable
       if arg.is_a?(Regexp)
         my_each { |ind| count += 1 if ind.match(arg) }
       elsif arg.is_a?(Numeric)
-        my_each { |ind| count += 1 if ind.match(arg) }
+        my_each { |ind| count += 1 if ind===arg }
 
       end
       return count
@@ -152,6 +152,7 @@ module Enumerable
     end
     r
   end
-  pr =[nil, false, true].my_none?  
+  ary = [1, 2, 4, 2]
+  pr =ary.my_count(1)
   p pr
 end
