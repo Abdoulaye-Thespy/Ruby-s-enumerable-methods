@@ -130,7 +130,7 @@ module Enumerable
     my_each do |i|
       new_arr << yield(i)
     end
-    p new_arr
+    new_arr
   end
 
   def my_inject(base = nil, sym = nil, &block)
