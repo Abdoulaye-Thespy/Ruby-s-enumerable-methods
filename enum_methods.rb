@@ -12,7 +12,7 @@ module Enumerable
 
     i = 0
     my_each do |element|
-      yield(i, element)
+      yield(element, i)
       i += 1
     end
   end
@@ -152,6 +152,4 @@ module Enumerable
     end
     r
   end
-  r=[1,2,5,8].my_inject(1, :*)  
-  p r
 end
