@@ -135,8 +135,8 @@ module Enumerable
 
   def my_inject(base = nil, sym = nil, &block)
     base = base.to_sym if base.is_a?(String) && !sym && !block
-    if memo.is_a?(Symbol) && !sym
-      block = memo.to_proc
+    if base.is_a?(Symbol) && !sym
+      block = base.to_proc
       base = nil
     end
     sym = sym.to_sym if sym.is_a?(String)
@@ -152,8 +152,6 @@ module Enumerable
     end
     r
   end
-
-  ary = [1, 2, 4, 2]
-  r = ary.my_count(&:even?)
+  r=[1,2,5,8].my_inject(1, :*)  
   p r
 end
